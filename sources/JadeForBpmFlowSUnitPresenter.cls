@@ -19,7 +19,7 @@ runSelected
 			[:gsTestMethod |
 			tests at: gsTestMethod className ifAbsentPut: [OrderedCollection new].
 			(tests at: gsTestMethod className) add: gsTestMethod].
-	fileStream := FileStream write: 'C:\Temp\process.svg' text: true.
+	fileStream := FileStream write: JadeSUnitBrowserPreference default svgExternalFile text: true.
 	fileStream nextPutAll: '<svg>'.
 	tests keysAndValuesDo: [:className :testsToExecute  | | testInstance collectionResult procInstance svg size |
 			"self runTests: testsToExecute in: className result: result."
@@ -38,6 +38,6 @@ runSelected
 	].
 	fileStream nextPutAll: '</svg>'.
 	fileStream flush; close.
-	WebBrowserShell show openUrl: 'C:\Temp\process.svg'! !
+	WebBrowserShell show openUrl: JadeSUnitBrowserPreference default svgExternalFile! !
 !JadeForBpmFlowSUnitPresenter categoriesFor: #runSelected!public! !
 

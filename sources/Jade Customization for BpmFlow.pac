@@ -38,7 +38,7 @@ package!
 "Class Definitions"!
 
 JadePreferenceObject subclass: #JadeSUnitBrowserPreference
-	instanceVariableNames: 'browserClass'
+	instanceVariableNames: 'browserClass svgExternalFile'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -108,12 +108,21 @@ publishedAspects
 	| aspects |
 	aspects := super publishedAspects.
 	aspects
-		add: (Aspect choice: #browserClass from: (Array with: JadeSUnitBrowser with: JadeForBpmFlowSUnitBrowser)).
-	^aspects! !
+		add: (Aspect choice: #browserClass from: (Array with: JadeSUnitBrowser with: JadeForBpmFlowSUnitBrowser));
+		add: (Aspect string: #svgExternalFile).
+	^aspects!
+
+svgExternalFile
+	^svgExternalFile!
+
+svgExternalFile: anObject
+	svgExternalFile := anObject! !
 !JadeSUnitBrowserPreference categoriesFor: #browserClass!accessing!private! !
 !JadeSUnitBrowserPreference categoriesFor: #browserClass:!accessing!private! !
 !JadeSUnitBrowserPreference categoriesFor: #displayString!public! !
 !JadeSUnitBrowserPreference categoriesFor: #publishedAspects!public! !
+!JadeSUnitBrowserPreference categoriesFor: #svgExternalFile!accessing!private! !
+!JadeSUnitBrowserPreference categoriesFor: #svgExternalFile:!accessing!private! !
 
 JadeForBpmFlowSUnitPresenter guid: (GUID fromString: '{d65fe418-bb02-4d6a-bd3f-bb665bf4a0f6}')!
 JadeForBpmFlowSUnitPresenter comment: ''!
@@ -129,7 +138,7 @@ runSelected
 			[:gsTestMethod |
 			tests at: gsTestMethod className ifAbsentPut: [OrderedCollection new].
 			(tests at: gsTestMethod className) add: gsTestMethod].
-	fileStream := FileStream write: 'C:\Temp\process.svg' text: true.
+	fileStream := FileStream write: JadeSUnitBrowserPreference default svgExternalFile text: true.
 	fileStream nextPutAll: '<svg>'.
 	tests keysAndValuesDo: [:className :testsToExecute  | | testInstance collectionResult procInstance svg size |
 			"self runTests: testsToExecute in: className result: result."
@@ -148,7 +157,7 @@ runSelected
 	].
 	fileStream nextPutAll: '</svg>'.
 	fileStream flush; close.
-	WebBrowserShell show openUrl: 'C:\Temp\process.svg'! !
+	WebBrowserShell show openUrl: JadeSUnitBrowserPreference default svgExternalFile! !
 !JadeForBpmFlowSUnitPresenter categoriesFor: #runSelected!public! !
 
 JadeForBpmFlowSUnitBrowser guid: (GUID fromString: '{4f26cd89-7417-43ca-b7ac-1ede3b3c09c7}')!

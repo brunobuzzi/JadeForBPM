@@ -1,7 +1,7 @@
 ﻿"Filed out from Dolphin Smalltalk 7"!
 
 JadePreferenceObject subclass: #JadeSUnitBrowserPreference
-	instanceVariableNames: 'browserClass'
+	instanceVariableNames: 'browserClass svgExternalFile'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -26,10 +26,19 @@ publishedAspects
 	| aspects |
 	aspects := super publishedAspects.
 	aspects
-		add: (Aspect choice: #browserClass from: (Array with: JadeSUnitBrowser with: JadeForBpmFlowSUnitBrowser)).
-	^aspects! !
+		add: (Aspect choice: #browserClass from: (Array with: JadeSUnitBrowser with: JadeForBpmFlowSUnitBrowser));
+		add: (Aspect string: #svgExternalFile).
+	^aspects!
+
+svgExternalFile
+	^svgExternalFile!
+
+svgExternalFile: anObject
+	svgExternalFile := anObject! !
 !JadeSUnitBrowserPreference categoriesFor: #browserClass!accessing!private! !
 !JadeSUnitBrowserPreference categoriesFor: #browserClass:!accessing!private! !
 !JadeSUnitBrowserPreference categoriesFor: #displayString!public! !
 !JadeSUnitBrowserPreference categoriesFor: #publishedAspects!public! !
+!JadeSUnitBrowserPreference categoriesFor: #svgExternalFile!accessing!private! !
+!JadeSUnitBrowserPreference categoriesFor: #svgExternalFile:!accessing!private! !
 

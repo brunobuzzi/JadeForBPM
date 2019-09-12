@@ -38,7 +38,7 @@ package!
 "Class Definitions"!
 
 JadePreferenceObject subclass: #JadeSUnitBrowserPreference
-	instanceVariableNames: 'browserClass'
+	instanceVariableNames: 'browserClass svgExternalFile'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
