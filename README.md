@@ -21,4 +21,4 @@ To install Jade in Dolphin 7, follow these steps:
 
 Run a simulation of a BPM Process Instance and see the SVG map.
 
-[Extended SUnit](https://github.com/brunobuzzi/JadeForBPM/blob/master/wiki/extended-sunit.png)
+![Extended SUnit](https://github.com/brunobuzzi/JadeForBPM/blob/master/wiki/extended-sunit.png)
