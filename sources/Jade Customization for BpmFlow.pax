@@ -1,0 +1,85 @@
+﻿| package |
+package := Package name: 'Jade Customization for BpmFlow'.
+package paxVersion: 1;
+	basicComment: ''.
+
+
+package classNames
+	add: #JadeForBpmFlowSUnitBrowser;
+	add: #JadeForBpmFlowSUnitPresenter;
+	add: #JadeSUnitBrowserPreference;
+	yourself.
+
+package methodNames
+	add: #JadeSystemBrowser -> #jadeBrowseTests;
+	add: #JadeTextDocument -> #jadeBrowseTests;
+	add: #JadeToolsToolBarPresenter -> #browseTests;
+	yourself.
+
+package binaryGlobalNames: (Set new
+	yourself).
+
+package globalAliases: (Set new
+	yourself).
+
+package setPrerequisites: #(
+	'..\..\Jade\Core\Object Arts\Dolphin\IDE\Base\Development System'
+	'..\..\Jade\Core\Object Arts\Dolphin\Base\Dolphin'
+	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Base\Dolphin Basic Geometry'
+	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Base\Dolphin MVP Base'
+	'..\..\Jade\sources\Jade System Browser'
+	'..\..\Jade\sources\Jade Test Browser'
+	'..\..\Jade\sources\Jade UI'
+	'..\..\Jade\sources\Jade UI Base'
+	'..\..\Jade\Core\Object Arts\Samples\ActiveX\Web Browser\Simple Web Browser').
+
+package!
+
+"Class Definitions"!
+
+JadePreferenceObject subclass: #JadeSUnitBrowserPreference
+	instanceVariableNames: 'browserClass'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+JadeSUnitPresenter subclass: #JadeForBpmFlowSUnitPresenter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+JadeSUnitBrowser subclass: #JadeForBpmFlowSUnitBrowser
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+
+"Global Aliases"!
+
+
+"Loose Methods"!
+
+!JadeSystemBrowser methodsFor!
+
+jadeBrowseTests
+
+	JadeSUnitBrowserPreference default browserClass showOnSession: gciSession.
+! !
+!JadeSystemBrowser categoriesFor: #jadeBrowseTests!public! !
+
+!JadeTextDocument methodsFor!
+
+jadeBrowseTests
+
+	JadeSUnitBrowserPreference default browserClass showOnSession: gciSession.
+! !
+!JadeTextDocument categoriesFor: #jadeBrowseTests!Jade!private! !
+
+!JadeToolsToolBarPresenter methodsFor!
+
+browseTests
+
+	JadeSUnitBrowserPreference default browserClass showOnSession: gciSession.! !
+!JadeToolsToolBarPresenter categoriesFor: #browseTests!public! !
+
+"End of package definition"!
+
