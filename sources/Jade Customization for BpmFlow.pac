@@ -31,7 +31,7 @@ package setPrerequisites: #(
 	'..\..\Jade\sources\Jade Test Browser'
 	'..\..\Jade\sources\Jade UI'
 	'..\..\Jade\sources\Jade UI Base'
-	'..\..\Jade\Core\Object Arts\Samples\ActiveX\Web Browser\Simple Web Browser').
+	'..\..\Jade\Core\Object Arts\Dolphin\ActiveX\Shell\Windows Shell').
 
 package!
 
@@ -165,7 +165,8 @@ runSelected
 	fileStream flush; close.
 	result setSummary.
 	self setColorFor: result.
-	WebBrowserShell show openUrl: JadeSUnitBrowserPreference default svgExternalFile! !
+	"WebBrowserShell show openUrl: JadeSUnitBrowserPreference default svgExternalFile"
+	ShellLibrary default shellOpen: JadeSUnitBrowserPreference default svgExternalFile! !
 !JadeForBpmFlowSUnitPresenter categoriesFor: #runSelected!public! !
 
 JadeForBpmFlowSUnitBrowser guid: (GUID fromString: '{4f26cd89-7417-43ca-b7ac-1ede3b3c09c7}')!

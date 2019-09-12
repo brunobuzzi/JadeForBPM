@@ -31,7 +31,7 @@ package setPrerequisites: #(
 	'..\..\Jade\sources\Jade Test Browser'
 	'..\..\Jade\sources\Jade UI'
 	'..\..\Jade\sources\Jade UI Base'
-	'..\..\Jade\Core\Object Arts\Samples\ActiveX\Web Browser\Simple Web Browser').
+	'..\..\Jade\Core\Object Arts\Dolphin\ActiveX\Shell\Windows Shell').
 
 package!
 

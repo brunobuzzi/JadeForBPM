@@ -46,6 +46,7 @@ runSelected
 	fileStream flush; close.
 	result setSummary.
 	self setColorFor: result.
-	WebBrowserShell show openUrl: JadeSUnitBrowserPreference default svgExternalFile! !
+	"WebBrowserShell show openUrl: JadeSUnitBrowserPreference default svgExternalFile"
+	ShellLibrary default shellOpen: JadeSUnitBrowserPreference default svgExternalFile! !
 !JadeForBpmFlowSUnitPresenter categoriesFor: #runSelected!public! !
 
