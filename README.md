@@ -16,3 +16,9 @@ To install Jade in Dolphin 7, follow these steps:
 4. Clone [Jade for BPM](https://github.com/brunobuzzi/JadeForBPM.git) to Documents\Dolphin\JadeForBPM.
 4. Run Documents\Dolphin\Jade\BootJade.cmd to build the JadeDev image.
 5. Finally, from the Additional Tools folder in the System Shell open the Jade Login.
+
+###Extended SUnit Browser for BPM Flow
+
+Run a simulation of a BPM Process Instance and see the SVG map.
+
+[Extended SUnit](https://github.com/brunobuzzi/JadeForBPM/blob/master/wiki/extended-sunit.png)
