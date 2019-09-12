@@ -36,8 +36,9 @@ runSelected
 				1 to: passedSize do: [:index | 
 					testInstance := gciSession send:  #at: to: collectionResult withAll: (Array with: index).
 					procInstance := gciSession send:  #procInstance to: testInstance.
-					svg := gciSession send:  #asSVG to: procInstance.	
-					fileStream nextPutAll: svg.
+					procInstance ifNotNil: [svg := gciSession send:  #asSVG to: procInstance.	
+									fileStream nextPutAll: svg.
+					].
 				].
 			].
 	].
