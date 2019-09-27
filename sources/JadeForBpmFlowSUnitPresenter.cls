@@ -11,7 +11,7 @@ JadeForBpmFlowSUnitPresenter comment: ''!
 !JadeForBpmFlowSUnitPresenter methodsFor!
 
 runSelected
-	| result tests gsResult fileStream |
+	| result tests gsResult fileStream isProcessSimulationTest |
 	result := JadeTestResult new.
 	tests := Dictionary new.
 
@@ -20,9 +20,10 @@ runSelected
 			(tests at: gsTestMethod className) add: gsTestMethod.
 	].
 	fileStream := FileStream write: JadeSUnitBrowserPreference default svgExternalFile text: true.
-	fileStream nextPutAll: '<svg>'.
+"	fileStream nextPutAll: '<svg>'.  "
 	tests keysAndValuesDo: [:className :testsToExecute  | | testInstance collectionResult procInstance svg passedSize failureSize errorSize |
 			"self runTests: testsToExecute in: className result: result."
+			isProcessSimulationTest := gciSession executeString: className, ' isProcessSimulationTest'.  "this is executed only for GS subclasses of <BpmProcessExecutionTest>"
 			testsToExecute do: [:gsTestMethod |
 				gsResult := gciSession executeString: '(', className, ' selector: #',  gsTestMethod methodName, ') run'.
 				failureSize := gciSession send: #size to: (gciSession send: #failures to: gsResult).
@@ -32,22 +33,22 @@ runSelected
 				(failureSize > 0) ifTrue: [gsTestMethod result: 'failure'. result addFailure: gsTestMethod].
 				(errorSize > 0) ifTrue: [gsTestMethod result: 'error'. result addError: gsTestMethod].
 				(passedSize > 0) ifTrue: [gsTestMethod result: 'passed'. result addPassed: gsTestMethod].
-				
-				1 to: passedSize do: [:index | 
-					testInstance := gciSession send:  #at: to: collectionResult withAll: (Array with: index).
-					procInstance := gciSession send:  #procInstance to: testInstance.
-					procInstance ifNotNil: [svg := gciSession send:  #asSVG to: procInstance.	
-									fileStream nextPutAll: svg.
-					].
+				isProcessSimulationTest 
+				ifTrue: [1 to: passedSize do: [:index | 
+									testInstance := gciSession send:  #at: to: collectionResult withAll: (Array with: index).
+									procInstance := gciSession send:  #procInstance to: testInstance.
+									procInstance ifNotNil: [svg := gciSession send:  #asSVG to: procInstance.	
+													fileStream nextPutAll: svg].
+						].	
 				].
 			].
 	].
-	fileStream nextPutAll: '</svg>'.
+	"fileStream nextPutAll: '</svg>'.  "
 	fileStream flush; close.
 	result setSummary.
 	self setColorFor: result.
 	"WebBrowserShell show openUrl: JadeSUnitBrowserPreference default svgExternalFile"
-	ShellLibrary default shellOpen: JadeSUnitBrowserPreference default svgExternalFile!
+	isProcessSimulationTest ifTrue: [ShellLibrary default shellOpen: JadeSUnitBrowserPreference default svgExternalFile].!
 
 runSelectedAndInspect
 	| result tests gsResult fileStream |
@@ -59,7 +60,6 @@ runSelectedAndInspect
 			(tests at: gsTestMethod className) add: gsTestMethod.
 	].
 	fileStream := FileStream write: JadeSUnitBrowserPreference default svgExternalFile text: true.
-	fileStream nextPutAll: '<svg>'.
 	tests keysAndValuesDo: [:className :testsToExecute  | | testInstance collectionResult procInstance svg passedSize failureSize errorSize |
 			"self runTests: testsToExecute in: className result: result."
 			testsToExecute do: [:gsTestMethod |
@@ -82,7 +82,6 @@ runSelectedAndInspect
 				].
 			].
 	].
-	fileStream nextPutAll: '</svg>'.
 	fileStream flush; close.
 	result setSummary.
 	self setColorFor: result.
