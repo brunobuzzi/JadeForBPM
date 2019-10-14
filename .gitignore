@@ -1,0 +1,15 @@
+*.pac
+Redist.txt
+JadeForBpmDev.*
+*.DS_Store
+._*
+Jade System Browser Layout.stb
+Jade/Connections/*.GSS
+*.ERRORS
+JadeForBpmDev.xml
+gci*trace.log
+connections
+JadeForBpmDev.exe
+JadeForBpmDev.zip
+JadeForBpmDev.log
+gciDebug.log
