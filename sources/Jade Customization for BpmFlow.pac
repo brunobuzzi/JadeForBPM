@@ -23,28 +23,28 @@ package globalAliases: (Set new
 	yourself).
 
 package setPrerequisites: #(
-	'..\..\Jade\Core\Object Arts\Dolphin\IDE\Base\Development System'
-	'..\..\Jade\Core\Object Arts\Dolphin\Base\Dolphin'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Base\Dolphin Basic Geometry'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Views\Common Controls\Dolphin Common Controls'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Views\Control Bars\Dolphin Control Bars'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Models\List\Dolphin List Models'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Deprecated\Dolphin MVP (Deprecated)'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Base\Dolphin MVP Base'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Type Converters\Dolphin Type Converters'
+	'..\Core\Object Arts\Dolphin\IDE\Base\Development System'
+	'..\Core\Object Arts\Dolphin\Base\Dolphin'
+	'..\Core\Object Arts\Dolphin\MVP\Base\Dolphin Basic Geometry'
+	'..\Core\Object Arts\Dolphin\MVP\Views\Common Controls\Dolphin Common Controls'
+	'..\Core\Object Arts\Dolphin\MVP\Views\Control Bars\Dolphin Control Bars'
+	'..\Core\Object Arts\Dolphin\MVP\Models\List\Dolphin List Models'
+	'..\Core\Object Arts\Dolphin\MVP\Deprecated\Dolphin MVP (Deprecated)'
+	'..\Core\Object Arts\Dolphin\MVP\Base\Dolphin MVP Base'
+	'..\Core\Object Arts\Dolphin\MVP\Type Converters\Dolphin Type Converters'
 	'..\..\Jade\sources\Jade Inspector'
 	'..\..\Jade\sources\Jade System Browser'
 	'..\..\Jade\sources\Jade Test Browser'
 	'..\..\Jade\sources\Jade UI'
 	'..\..\Jade\sources\Jade UI Base'
-	'..\..\Jade\Core\Object Arts\Dolphin\ActiveX\Shell\Windows Shell').
+	'..\Core\Object Arts\Dolphin\ActiveX\Shell\Windows Shell').
 
 package!
 
 "Class Definitions"!
 
 JadePreferenceObject subclass: #JadeSUnitBrowserPreference
-	instanceVariableNames: 'browserClass svgExternalFile'
+	instanceVariableNames: 'browserClass svgExternalFile isEnabled'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -108,6 +108,18 @@ displayString
 
 	^'SUnit Browser'!
 
+initialize
+
+	super initialize.
+
+	isEnabled := true.!
+
+isEnabled
+	^isEnabled!
+
+isEnabled: anObject
+	isEnabled := anObject!
+
 publishedAspects
 	"Answer a <LookupTable> of the <Aspect>s published by the receiver."
 
@@ -115,7 +127,8 @@ publishedAspects
 	aspects := super publishedAspects.
 	aspects
 		add: (Aspect choice: #browserClass from: (Array with: JadeSUnitBrowser with: JadeForBpmFlowSUnitBrowser));
-		add: (Aspect string: #svgExternalFile).
+		add: (Aspect string: #svgExternalFile);
+		add: (Aspect boolean: #isEnabled).
 	^aspects!
 
 svgExternalFile
@@ -126,6 +139,9 @@ svgExternalFile: anObject
 !JadeSUnitBrowserPreference categoriesFor: #browserClass!accessing!private! !
 !JadeSUnitBrowserPreference categoriesFor: #browserClass:!accessing!private! !
 !JadeSUnitBrowserPreference categoriesFor: #displayString!public! !
+!JadeSUnitBrowserPreference categoriesFor: #initialize!public! !
+!JadeSUnitBrowserPreference categoriesFor: #isEnabled!accessing!private! !
+!JadeSUnitBrowserPreference categoriesFor: #isEnabled:!accessing!private! !
 !JadeSUnitBrowserPreference categoriesFor: #publishedAspects!public! !
 !JadeSUnitBrowserPreference categoriesFor: #svgExternalFile!accessing!private! !
 !JadeSUnitBrowserPreference categoriesFor: #svgExternalFile:!accessing!private! !
@@ -173,7 +189,7 @@ runSelected
 	result setSummary.
 	self setColorFor: result.
 	"WebBrowserShell show openUrl: JadeSUnitBrowserPreference default svgExternalFile"
-	isProcessSimulationTest ifTrue: [ShellLibrary default shellOpen: JadeSUnitBrowserPreference default svgExternalFile].!
+	 (JadeSUnitBrowserPreference default isEnabled and:[isProcessSimulationTest]) ifTrue: [ShellLibrary default shellOpen: JadeSUnitBrowserPreference default svgExternalFile].!
 
 runSelectedAndInspect
 	| result tests gsResult fileStream |

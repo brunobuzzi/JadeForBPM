@@ -23,28 +23,28 @@ package globalAliases: (Set new
 	yourself).
 
 package setPrerequisites: #(
-	'..\..\Jade\Core\Object Arts\Dolphin\IDE\Base\Development System'
-	'..\..\Jade\Core\Object Arts\Dolphin\Base\Dolphin'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Base\Dolphin Basic Geometry'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Views\Common Controls\Dolphin Common Controls'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Views\Control Bars\Dolphin Control Bars'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Models\List\Dolphin List Models'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Deprecated\Dolphin MVP (Deprecated)'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Base\Dolphin MVP Base'
-	'..\..\Jade\Core\Object Arts\Dolphin\MVP\Type Converters\Dolphin Type Converters'
+	'..\Core\Object Arts\Dolphin\IDE\Base\Development System'
+	'..\Core\Object Arts\Dolphin\Base\Dolphin'
+	'..\Core\Object Arts\Dolphin\MVP\Base\Dolphin Basic Geometry'
+	'..\Core\Object Arts\Dolphin\MVP\Views\Common Controls\Dolphin Common Controls'
+	'..\Core\Object Arts\Dolphin\MVP\Views\Control Bars\Dolphin Control Bars'
+	'..\Core\Object Arts\Dolphin\MVP\Models\List\Dolphin List Models'
+	'..\Core\Object Arts\Dolphin\MVP\Deprecated\Dolphin MVP (Deprecated)'
+	'..\Core\Object Arts\Dolphin\MVP\Base\Dolphin MVP Base'
+	'..\Core\Object Arts\Dolphin\MVP\Type Converters\Dolphin Type Converters'
 	'..\..\Jade\sources\Jade Inspector'
 	'..\..\Jade\sources\Jade System Browser'
 	'..\..\Jade\sources\Jade Test Browser'
 	'..\..\Jade\sources\Jade UI'
 	'..\..\Jade\sources\Jade UI Base'
-	'..\..\Jade\Core\Object Arts\Dolphin\ActiveX\Shell\Windows Shell').
+	'..\Core\Object Arts\Dolphin\ActiveX\Shell\Windows Shell').
 
 package!
 
 "Class Definitions"!
 
 JadePreferenceObject subclass: #JadeSUnitBrowserPreference
-	instanceVariableNames: 'browserClass svgExternalFile'
+	instanceVariableNames: 'browserClass svgExternalFile isEnabled'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!

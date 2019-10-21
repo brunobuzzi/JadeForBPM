@@ -48,7 +48,7 @@ runSelected
 	result setSummary.
 	self setColorFor: result.
 	"WebBrowserShell show openUrl: JadeSUnitBrowserPreference default svgExternalFile"
-	isProcessSimulationTest ifTrue: [ShellLibrary default shellOpen: JadeSUnitBrowserPreference default svgExternalFile].!
+	 (JadeSUnitBrowserPreference default isEnabled and:[isProcessSimulationTest]) ifTrue: [ShellLibrary default shellOpen: JadeSUnitBrowserPreference default svgExternalFile].!
 
 runSelectedAndInspect
 	| result tests gsResult fileStream |
