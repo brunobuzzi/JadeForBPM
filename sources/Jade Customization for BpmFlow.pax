@@ -5,15 +5,20 @@ package paxVersion: 1;
 
 
 package classNames
+	add: #BpmAllSessionsPresenter;
+	add: #JadeBpmTranscript;
 	add: #JadeForBpmFlowSUnitBrowser;
 	add: #JadeForBpmFlowSUnitPresenter;
 	add: #JadeSUnitBrowserPreference;
 	yourself.
 
 package methodNames
+	add: #JadeLoginShell -> #postLogin:;
 	add: #JadeSystemBrowser -> #jadeBrowseTests;
 	add: #JadeTextDocument -> #jadeBrowseTests;
 	add: #JadeToolsToolBarPresenter -> #browseTests;
+	add: #JadeTranscript -> #createComponents;
+	add: #JadeTranscript -> #defaultAllSessionsPresenterClass;
 	yourself.
 
 package binaryGlobalNames: (Set new
@@ -31,10 +36,13 @@ package setPrerequisites: #(
 	'..\Core\Object Arts\Dolphin\MVP\Models\List\Dolphin List Models'
 	'..\Core\Object Arts\Dolphin\MVP\Deprecated\Dolphin MVP (Deprecated)'
 	'..\Core\Object Arts\Dolphin\MVP\Base\Dolphin MVP Base'
+	'..\Core\Object Arts\Dolphin\MVP\Presenters\Text\Dolphin Text Presenter'
 	'..\Core\Object Arts\Dolphin\MVP\Type Converters\Dolphin Type Converters'
 	'..\..\Jade\sources\Jade Inspector'
+	'..\..\Jade\sources\Jade Login'
 	'..\..\Jade\sources\Jade System Browser'
 	'..\..\Jade\sources\Jade Test Browser'
+	'..\..\Jade\sources\Jade Transcript'
 	'..\..\Jade\sources\Jade UI'
 	'..\..\Jade\sources\Jade UI Base'
 	'..\Core\Object Arts\Dolphin\ActiveX\Shell\Windows Shell').
@@ -48,7 +56,17 @@ JadePreferenceObject subclass: #JadeSUnitBrowserPreference
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+AllSessionsPresenter subclass: #BpmAllSessionsPresenter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
 JadeSUnitPresenter subclass: #JadeForBpmFlowSUnitPresenter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+JadeTranscript subclass: #JadeBpmTranscript
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -63,6 +81,25 @@ JadeSUnitBrowser subclass: #JadeForBpmFlowSUnitBrowser
 
 
 "Loose Methods"!
+
+!JadeLoginShell methodsFor!
+
+postLogin: aGciSession
+
+	loginListPresenter view updateAll.
+	self setWorkingDirectory.
+	model 
+		session: aGciSession;
+		transcript: (JadeBpmTranscript showOnSession: aGciSession);
+		yourself.
+	aGciSession 
+		when: #logout
+		send: #logout:
+		to: self
+		with: self model.
+
+! !
+!JadeLoginShell categoriesFor: #postLogin:!public! !
 
 !JadeSystemBrowser methodsFor!
 
@@ -86,6 +123,25 @@ browseTests
 
 	JadeSUnitBrowserPreference default browserClass showOnSession: gciSession.! !
 !JadeToolsToolBarPresenter categoriesFor: #browseTests!public! !
+
+!JadeTranscript methodsFor!
+
+createComponents
+
+	super createComponents.
+	allSessionsPresenter	:= self add: self defaultAllSessionsPresenterClass	new name: 'All Sessions'.
+	historyPresenter	:= self add: TextPresenter				new name: 'history'.
+	mySessionPresenter	:= self add: MySessionPresenter			new name: 'My Session'.
+	stoneInfoPresenter	:= self add: StoneInfoPresenter			new name: 'Stone'.
+	toolbarPresenter	:= self add: JadeToolsToolBarPresenter	new name: 'Toolbar'.
+	transcriptPresenter	:= self add: TranscriptPresenter			new name: 'Transcript'.
+!
+
+defaultAllSessionsPresenterClass
+
+	^AllSessionsPresenter! !
+!JadeTranscript categoriesFor: #createComponents!public! !
+!JadeTranscript categoriesFor: #defaultAllSessionsPresenterClass!public! !
 
 "End of package definition"!
 
