@@ -6,6 +6,7 @@ package paxVersion: 1;
 
 package classNames
 	add: #BpmAllSessionsPresenter;
+	add: #BpmGemProcess;
 	add: #JadeBpmTranscript;
 	add: #JadeForBpmFlowSUnitBrowser;
 	add: #JadeForBpmFlowSUnitPresenter;
@@ -54,13 +55,18 @@ package!
 
 "Class Definitions"!
 
+Object subclass: #BpmGemProcess
+	instanceVariableNames: 'name pid port'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
 JadePreferenceObject subclass: #JadeSUnitBrowserPreference
 	instanceVariableNames: 'browserClass svgExternalFile isEnabled'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 AllSessionsPresenter subclass: #BpmAllSessionsPresenter
-	instanceVariableNames: ''
+	instanceVariableNames: 'gemsListPresenter'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
