@@ -30,8 +30,10 @@ fillSessionList
 		portPidArray := portPid subStrings: '>>'.
 		gemProc := BpmGemProcess new port: portPidArray first; pid: portPidArray second ; yourself.
 		gsSession := sessionListPresenter model detect: [:each | each process printString = gemProc pid] ifNone: [].
-		gsSession ifNotNil: [gemProc name: gsSession cacheDesc].
-		gemsListPresenter model add: gemProc].
+		gsSession ifNotNil: [
+			gemProc name: gsSession cacheDesc.
+			gemsListPresenter model add: gemProc].
+	].
 
 ! !
 !BpmAllSessionsPresenter categoriesFor: #createComponents!public! !
