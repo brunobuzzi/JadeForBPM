@@ -100,6 +100,8 @@ startPingLoop
 stopAll
 	| result command |
 
+	self stopPingLoop.
+
 	command := WriteStream on: String new.
 	command nextPutAll: 'System performOnServer: ';
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
