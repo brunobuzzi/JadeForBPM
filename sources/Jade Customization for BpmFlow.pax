@@ -7,10 +7,10 @@ package paxVersion: 1;
 package classNames
 	add: #BpmAllSessionsPresenter;
 	add: #BpmGemProcess;
+	add: #JadeBpmCustomizationPreference;
 	add: #JadeBpmTranscript;
 	add: #JadeForBpmFlowSUnitBrowser;
 	add: #JadeForBpmFlowSUnitPresenter;
-	add: #JadeSUnitBrowserPreference;
 	yourself.
 
 package methodNames
@@ -61,8 +61,8 @@ Object subclass: #BpmGemProcess
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-JadePreferenceObject subclass: #JadeSUnitBrowserPreference
-	instanceVariableNames: 'browserClass svgExternalFile isEnabled'
+JadePreferenceObject subclass: #JadeBpmCustomizationPreference
+	instanceVariableNames: 'browserClass svgExternalFile isEnabled webServerCheckLoopDelay'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -114,24 +114,19 @@ postLogin: aGciSession
 !JadeSystemBrowser methodsFor!
 
 jadeBrowseTests
-
-	JadeSUnitBrowserPreference default browserClass showOnSession: gciSession.
-! !
+	JadeBpmCustomizationPreference default browserClass showOnSession: gciSession! !
 !JadeSystemBrowser categoriesFor: #jadeBrowseTests!public! !
 
 !JadeTextDocument methodsFor!
 
 jadeBrowseTests
-
-	JadeSUnitBrowserPreference default browserClass showOnSession: gciSession.
-! !
+	JadeBpmCustomizationPreference default browserClass showOnSession: gciSession! !
 !JadeTextDocument categoriesFor: #jadeBrowseTests!Jade!private! !
 
 !JadeToolsToolBarPresenter methodsFor!
 
 browseTests
-
-	JadeSUnitBrowserPreference default browserClass showOnSession: gciSession.! !
+	JadeBpmCustomizationPreference default browserClass showOnSession: gciSession! !
 !JadeToolsToolBarPresenter categoriesFor: #browseTests!public! !
 
 !JadeTranscript methodsFor!
