@@ -16,6 +16,12 @@ createComponents
 
 	gemsListPresenter := self add: ListPresenter new name: 'gemsList'.!
 
+createSchematicWiring
+
+	super createSchematicWiring.
+
+	gemsListPresenter when: #selectionChanged send: #onGemProcessSelected to: self!
+
 fillSessionList
 	| portPidString portPidStringList |
 
@@ -31,10 +37,18 @@ fillSessionList
 		gemProc := BpmGemProcess new port: portPidArray first; pid: portPidArray second ; yourself.
 		gsSession := sessionListPresenter model detect: [:each | each process printString = gemProc pid] ifNone: [].
 		gsSession ifNotNil: [
-			gemProc name: gsSession cacheDesc.
+			gemProc name: gsSession cacheDesc;
+				gsSession: gsSession.
 			gemsListPresenter model add: gemProc].
 	].
 
+!
+
+onGemProcessSelected
+
+	gemsListPresenter hasSelection ifFalse: [^sessionListPresenter resetSelection].
+
+	sessionListPresenter selection: gemsListPresenter selection gsSession ifAbsent: []
 !
 
 startAll
@@ -66,7 +80,9 @@ stopAll
 
 	self fillSessionList! !
 !BpmAllSessionsPresenter categoriesFor: #createComponents!public! !
+!BpmAllSessionsPresenter categoriesFor: #createSchematicWiring!public! !
 !BpmAllSessionsPresenter categoriesFor: #fillSessionList!public!updating! !
+!BpmAllSessionsPresenter categoriesFor: #onGemProcessSelected!public! !
 !BpmAllSessionsPresenter categoriesFor: #startAll!public! !
 !BpmAllSessionsPresenter categoriesFor: #stopAll!public! !
 
