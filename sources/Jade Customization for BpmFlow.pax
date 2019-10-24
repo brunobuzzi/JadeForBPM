@@ -57,7 +57,7 @@ package!
 "Class Definitions"!
 
 Object subclass: #BpmGemProcess
-	instanceVariableNames: 'name pid port gsSession'
+	instanceVariableNames: 'name pid port gsSession pingFailed'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!

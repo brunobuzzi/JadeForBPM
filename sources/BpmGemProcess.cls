@@ -1,7 +1,7 @@
 ﻿"Filed out from Dolphin Smalltalk 7"!
 
 Object subclass: #BpmGemProcess
-	instanceVariableNames: 'name pid port gsSession'
+	instanceVariableNames: 'name pid port gsSession pingFailed'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -16,6 +16,12 @@ gsSession
 gsSession: anObject
 	gsSession := anObject!
 
+initialize
+
+	super initialize.
+
+	pingFailed := false!
+
 name
 	^name!
 
@@ -28,17 +34,41 @@ pid
 pid: anObject
 	pid := anObject!
 
+pingFailed
+	^pingFailed!
+
+pingFailed: anObject
+	pingFailed := anObject!
+
 port
 	^port!
 
 port: anObject
-	port := anObject! !
+	port := anObject!
+
+setPingStatusFrom: curlCommandResult
+	"The receiver set the status <pingFailed> from the result <curlCommandResult> of executing a Linux 'curl' command against a Gem process"
+
+	pingFailed := (curlCommandResult indexOfSubCollection: 'Connection refused') ~= 0
+
+! !
 !BpmGemProcess categoriesFor: #gsSession!accessing!private! !
 !BpmGemProcess categoriesFor: #gsSession:!accessing!private! !
+!BpmGemProcess categoriesFor: #initialize!public! !
 !BpmGemProcess categoriesFor: #name!accessing!private! !
 !BpmGemProcess categoriesFor: #name:!accessing!private! !
 !BpmGemProcess categoriesFor: #pid!accessing!private! !
 !BpmGemProcess categoriesFor: #pid:!accessing!private! !
+!BpmGemProcess categoriesFor: #pingFailed!accessing!private! !
+!BpmGemProcess categoriesFor: #pingFailed:!accessing!private! !
 !BpmGemProcess categoriesFor: #port!accessing!private! !
 !BpmGemProcess categoriesFor: #port:!accessing!private! !
+!BpmGemProcess categoriesFor: #setPingStatusFrom:!public! !
+
+!BpmGemProcess class methodsFor!
+
+new
+
+	^super new initialize! !
+!BpmGemProcess class categoriesFor: #new!public! !
 
