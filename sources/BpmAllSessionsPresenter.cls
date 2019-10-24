@@ -1,7 +1,7 @@
 ﻿"Filed out from Dolphin Smalltalk 7"!
 
 AllSessionsPresenter subclass: #BpmAllSessionsPresenter
-	instanceVariableNames: 'gemsListPresenter'
+	instanceVariableNames: 'gemsListPresenter pingLoop'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -44,6 +44,15 @@ fillSessionList
 
 !
 
+gemstoneBashCurlCommandFor: aBpmGemProcess
+	| command |
+
+	command := WriteStream on: String new.
+	command nextPutAll: 'System performOnServer: ';
+			nextPutAll: '''curl http://localhost:', aBpmGemProcess port,'/bpmflow'''.
+
+	^command contents!
+
 onGemProcessSelected
 
 	gemsListPresenter hasSelection ifFalse: [^sessionListPresenter resetSelection].
@@ -52,15 +61,11 @@ onGemProcessSelected
 !
 
 pingPort
-	| result command |
+	| result |
 
 	gemsListPresenter hasSelection ifFalse: [^self].
 
-	command := WriteStream on: String new.
-	command nextPutAll: 'System performOnServer: ';
-			nextPutAll: '''curl http://localhost:', gemsListPresenter selection port,'/bpmflow'''.
-
-	result := gciSession executeString: command contents.
+	result := gciSession executeString: (self gemstoneBashCurlCommandFor: gemsListPresenter selection).
 
 	MessageBox notify: result.
 
@@ -81,6 +86,17 @@ startAll
 	self fillSessionList
 !
 
+startPingLoop
+
+	pingLoop := [ [true] whileTrue: [
+			gemsListPresenter model do: [:bpmGemProc | | result |
+				result := gciSession executeString: (self gemstoneBashCurlCommandFor: bpmGemProc).
+				bpmGemProc setPingStatusFrom: result.
+				(Delay forSeconds: 5) wait.
+			].
+		].
+	] forkAt: 4.!
+
 stopAll
 	| result command |
 
@@ -93,14 +109,25 @@ stopAll
 
 	MessageBox notify: result.
 
-	self fillSessionList! !
+	self fillSessionList!
+
+stopPingLoop
+
+	pingLoop ifNil: [^self].
+
+	pingLoop terminate.
+
+	pingLoop := nil! !
 !BpmAllSessionsPresenter categoriesFor: #createComponents!public! !
 !BpmAllSessionsPresenter categoriesFor: #createSchematicWiring!public! !
 !BpmAllSessionsPresenter categoriesFor: #fillSessionList!public!updating! !
+!BpmAllSessionsPresenter categoriesFor: #gemstoneBashCurlCommandFor:!public! !
 !BpmAllSessionsPresenter categoriesFor: #onGemProcessSelected!public! !
 !BpmAllSessionsPresenter categoriesFor: #pingPort!public! !
 !BpmAllSessionsPresenter categoriesFor: #startAll!public! !
+!BpmAllSessionsPresenter categoriesFor: #startPingLoop!public! !
 !BpmAllSessionsPresenter categoriesFor: #stopAll!public! !
+!BpmAllSessionsPresenter categoriesFor: #stopPingLoop!public! !
 
 !BpmAllSessionsPresenter class methodsFor!
 
