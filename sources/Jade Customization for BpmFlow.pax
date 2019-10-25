@@ -40,6 +40,7 @@ package setPrerequisites: #(
 	'..\Core\Object Arts\Dolphin\Base\Dolphin Message Box'
 	'..\Core\Object Arts\Dolphin\MVP\Deprecated\Dolphin MVP (Deprecated)'
 	'..\Core\Object Arts\Dolphin\MVP\Base\Dolphin MVP Base'
+	'..\Core\Object Arts\Dolphin\MVP\Presenters\Prompters\Dolphin Prompter'
 	'..\Core\Object Arts\Dolphin\MVP\Presenters\Text\Dolphin Text Presenter'
 	'..\Core\Object Arts\Dolphin\MVP\Type Converters\Dolphin Type Converters'
 	'..\Core\Object Arts\Dolphin\MVP\Models\Value\Dolphin Value Models'
