@@ -412,9 +412,34 @@ startPingLoop
 		].
 	] forkAt: 4.!
 
-startScriptsServer!
+startScriptsServer
+	| result command |
 
-startTimersServer!
+	command := WriteStream on: String new.
+	command nextPutAll: 'System performOnServer: ';
+			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
+			nextPutAll: 'sh start-deferred-scripts-loop.sh '''.
+
+	result := gciSession executeString: command contents.
+
+	MessageBox notify: result.
+
+	self fillSessionList
+!
+
+startTimersServer
+	| result command |
+
+	command := WriteStream on: String new.
+	command nextPutAll: 'System performOnServer: ';
+			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
+			nextPutAll: 'sh start-timers-loop.sh '''.
+
+	result := gciSession executeString: command contents.
+
+	MessageBox notify: result.
+
+	self fillSessionList!
 
 stopAll
 	| result command |
@@ -469,7 +494,7 @@ stopTimersServer! !
 !BpmAllSessionsPresenter categoriesFor: #startAll!bpm flow commands!public! !
 !BpmAllSessionsPresenter categoriesFor: #startOnPort!bpm flow commands!public! !
 !BpmAllSessionsPresenter categoriesFor: #startPingLoop!bpm flow monitoring!public! !
-!BpmAllSessionsPresenter categoriesFor: #startScriptsServer!public! !
+!BpmAllSessionsPresenter categoriesFor: #startScriptsServer!bpm flow commands!public! !
 !BpmAllSessionsPresenter categoriesFor: #startTimersServer!bpm flow commands!public! !
 !BpmAllSessionsPresenter categoriesFor: #stopAll!bpm flow commands!public! !
 !BpmAllSessionsPresenter categoriesFor: #stopOnPort!bpm flow commands!public!updating! !
