@@ -466,16 +466,16 @@ stopTimersServer! !
 !BpmAllSessionsPresenter categoriesFor: #onGemProcessSelected!public! !
 !BpmAllSessionsPresenter categoriesFor: #pingPort!public! !
 !BpmAllSessionsPresenter categoriesFor: #restartOnPort!public! !
-!BpmAllSessionsPresenter categoriesFor: #startAll!public! !
-!BpmAllSessionsPresenter categoriesFor: #startOnPort!public! !
-!BpmAllSessionsPresenter categoriesFor: #startPingLoop!public! !
+!BpmAllSessionsPresenter categoriesFor: #startAll!bpm flow commands!public! !
+!BpmAllSessionsPresenter categoriesFor: #startOnPort!bpm flow commands!public! !
+!BpmAllSessionsPresenter categoriesFor: #startPingLoop!bpm flow monitoring!public! !
 !BpmAllSessionsPresenter categoriesFor: #startScriptsServer!public! !
-!BpmAllSessionsPresenter categoriesFor: #startTimersServer!public! !
-!BpmAllSessionsPresenter categoriesFor: #stopAll!public! !
-!BpmAllSessionsPresenter categoriesFor: #stopOnPort!public! !
-!BpmAllSessionsPresenter categoriesFor: #stopPingLoop!public! !
-!BpmAllSessionsPresenter categoriesFor: #stopScriptsServer!public! !
-!BpmAllSessionsPresenter categoriesFor: #stopTimersServer!public! !
+!BpmAllSessionsPresenter categoriesFor: #startTimersServer!bpm flow commands!public! !
+!BpmAllSessionsPresenter categoriesFor: #stopAll!bpm flow commands!public! !
+!BpmAllSessionsPresenter categoriesFor: #stopOnPort!bpm flow commands!public!updating! !
+!BpmAllSessionsPresenter categoriesFor: #stopPingLoop!bpm flow monitoring!public! !
+!BpmAllSessionsPresenter categoriesFor: #stopScriptsServer!bpm flow commands!public! !
+!BpmAllSessionsPresenter categoriesFor: #stopTimersServer!bpm flow commands!public! !
 
 !BpmAllSessionsPresenter class methodsFor!
 
