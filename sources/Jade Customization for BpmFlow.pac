@@ -386,7 +386,7 @@ startOnPort
 	| result command port |
 
 	port := Prompter prompt: 'Enter the Port number:' caption: 'Jade for BpmFlow'.
-	[Number fromString: port] on: Error do: [:ex | ^MessageBox notify: 'Invalid Port number [', port, ']' caption: 'Jade for BpmFlow'].
+	[Number fromString: port] on: Error do: [:ex | ^MessageBox notify: 'Invalid Port number [', port printString, ']' caption: 'Jade for BpmFlow'].
 
 	 (gciSession executeString: 'BpmGemsInfo isValidPortNumber: ', port) ifFalse: [^MessageBox notify: 'Invalid Port number [', port, ']. Check file ../scripts/ports-all.ini' caption: 'Jade for BpmFlow'].
 
