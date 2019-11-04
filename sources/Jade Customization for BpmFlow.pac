@@ -322,6 +322,15 @@ fillSessionList
 			gemsListPresenter model add: gemProc].
 	].
 
+	(sessionListPresenter model detect: [:gsSession | (gsSession cacheDesc = 'TimersLoop')] ifNone: [])
+	ifNotNil: [:gsSession | | gemProc |
+		gemProc := BpmGemProcess new name: gsSession cacheDesc; port: 'N/A'; pid: gsSession process; yourself.
+		gemsListPresenter model add: gemProc].
+
+	(sessionListPresenter model detect: [:gsSession | (gsSession cacheDesc = 'ScriptsLoop')] ifNone: [])
+	ifNotNil: [:gsSession | | gemProc |
+		gemProc := BpmGemProcess new name: gsSession cacheDesc; port: 'N/A'; pid: gsSession process; yourself.
+		gemsListPresenter model add: gemProc].
 !
 
 gemstoneBashCurlCommandFor: aBpmGemProcess
