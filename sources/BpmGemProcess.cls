@@ -51,7 +51,10 @@ setPingStatusFrom: curlCommandResult
 
 	pingFailed := (curlCommandResult indexOfSubCollection: 'Connection refused') ~= 0
 
-! !
+!
+
+stopSession
+	^gsSession stopSession! !
 !BpmGemProcess categoriesFor: #gsSession!accessing!private! !
 !BpmGemProcess categoriesFor: #gsSession:!accessing!private! !
 !BpmGemProcess categoriesFor: #initialize!public! !
@@ -64,6 +67,7 @@ setPingStatusFrom: curlCommandResult
 !BpmGemProcess categoriesFor: #port!accessing!private! !
 !BpmGemProcess categoriesFor: #port:!accessing!private! !
 !BpmGemProcess categoriesFor: #setPingStatusFrom:!public! !
+!BpmGemProcess categoriesFor: #stopSession!public! !
 
 !BpmGemProcess class methodsFor!
 

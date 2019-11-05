@@ -201,7 +201,10 @@ setPingStatusFrom: curlCommandResult
 
 	pingFailed := (curlCommandResult indexOfSubCollection: 'Connection refused') ~= 0
 
-! !
+!
+
+stopSession
+	^gsSession stopSession! !
 !BpmGemProcess categoriesFor: #gsSession!accessing!private! !
 !BpmGemProcess categoriesFor: #gsSession:!accessing!private! !
 !BpmGemProcess categoriesFor: #initialize!public! !
@@ -214,6 +217,7 @@ setPingStatusFrom: curlCommandResult
 !BpmGemProcess categoriesFor: #port!accessing!private! !
 !BpmGemProcess categoriesFor: #port:!accessing!private! !
 !BpmGemProcess categoriesFor: #setPingStatusFrom:!public! !
+!BpmGemProcess categoriesFor: #stopSession!public! !
 
 !BpmGemProcess class methodsFor!
 
@@ -324,12 +328,12 @@ fillSessionList
 
 	(sessionListPresenter model detect: [:gsSession | (gsSession cacheDesc = 'TimersLoop')] ifNone: [])
 	ifNotNil: [:gsSession | | gemProc |
-		gemProc := BpmGemProcess new name: gsSession cacheDesc; port: 'N/A'; pid: gsSession process; yourself.
+		gemProc := BpmGemProcess new name: gsSession cacheDesc; port: 'N/A'; pid: gsSession process; gsSession: gsSession; yourself.
 		gemsListPresenter model add: gemProc].
 
 	(sessionListPresenter model detect: [:gsSession | (gsSession cacheDesc = 'ScriptsLoop')] ifNone: [])
 	ifNotNil: [:gsSession | | gemProc |
-		gemProc := BpmGemProcess new name: gsSession cacheDesc; port: 'N/A'; pid: gsSession process; yourself.
+		gemProc := BpmGemProcess new name: gsSession cacheDesc; port: 'N/A'; pid: gsSession process; gsSession: gsSession; yourself.
 		gemsListPresenter model add: gemProc].
 !
 
@@ -490,9 +494,27 @@ stopPingLoop
 
 	pingLoop := nil!
 
-stopScriptsServer!
+stopScriptsServer
+	| bpmGemProcess |
 
-stopTimersServer! !
+	bpmGemProcess := gemsListPresenter model detect: [:each | each name = 'ScriptsLoop'] ifNone: [^self].
+
+	(MessageBox confirm: 'Stop Session?') ifFalse: [^self].
+	bpmGemProcess stopSession.
+	(Delay forSeconds: 1) wait.
+	self fillSessionList.!
+
+stopTimersServer
+	| bpmGemProcess |
+
+	bpmGemProcess := gemsListPresenter model detect: [:each | each name = 'TimersLoop'] ifNone: [^self].
+
+	(MessageBox confirm: 'Stop Session?') ifFalse: [^self].
+	bpmGemProcess stopSession.
+	(Delay forSeconds: 1) wait.
+	self fillSessionList.
+
+	! !
 !BpmAllSessionsPresenter categoriesFor: #createComponents!public! !
 !BpmAllSessionsPresenter categoriesFor: #createSchematicWiring!public! !
 !BpmAllSessionsPresenter categoriesFor: #fillSessionList!public!updating! !
