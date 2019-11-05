@@ -99,6 +99,8 @@ restartOnPort
 startAll
 	| result command |
 
+	(MessageBox confirm: 'Start All Web Sessions?') ifFalse: [^self].
+
 	command := WriteStream on: String new.
 	command nextPutAll: 'System performOnServer: ';
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
@@ -144,6 +146,8 @@ startPingLoop
 startScriptsServer
 	| result command |
 
+	(MessageBox confirm: 'Start Scripts Session?') ifFalse: [^self].
+
 	command := WriteStream on: String new.
 	command nextPutAll: 'System performOnServer: ';
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
@@ -159,6 +163,8 @@ startScriptsServer
 startTimersServer
 	| result command |
 
+	(MessageBox confirm: 'Start Timers Session?') ifFalse: [^self].
+
 	command := WriteStream on: String new.
 	command nextPutAll: 'System performOnServer: ';
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
@@ -172,6 +178,8 @@ startTimersServer
 
 stopAll
 	| result command |
+
+	(MessageBox confirm: 'Stop All Web Sessions?') ifFalse: [^self].
 
 	self stopPingLoop.
 
@@ -188,6 +196,8 @@ stopAll
 
 stopOnPort
 	| result command |
+
+	(MessageBox confirm: 'Stop Port Session?') ifFalse: [^self].
 
 	gemsListPresenter hasSelection ifFalse: [^self].
 
@@ -215,7 +225,8 @@ stopScriptsServer
 
 	bpmGemProcess := gemsListPresenter model detect: [:each | each name = 'ScriptsLoop'] ifNone: [^self].
 
-	(MessageBox confirm: 'Stop Session?') ifFalse: [^self].
+	(MessageBox confirm: 'Stop Scripts Session?') ifFalse: [^self].
+
 	bpmGemProcess stopSession.
 	(Delay forSeconds: 1) wait.
 	self fillSessionList.!
@@ -225,7 +236,8 @@ stopTimersServer
 
 	bpmGemProcess := gemsListPresenter model detect: [:each | each name = 'TimersLoop'] ifNone: [^self].
 
-	(MessageBox confirm: 'Stop Session?') ifFalse: [^self].
+	(MessageBox confirm: 'Stop Timers Session?') ifFalse: [^self].
+
 	bpmGemProcess stopSession.
 	(Delay forSeconds: 1) wait.
 	self fillSessionList.
