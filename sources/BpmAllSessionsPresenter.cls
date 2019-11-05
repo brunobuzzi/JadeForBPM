@@ -144,7 +144,7 @@ startPingLoop
 	] forkAt: 4.!
 
 startScriptsServer
-	| result command |
+	| command |
 
 	(MessageBox confirm: 'Start Scripts Session?') ifFalse: [^self].
 
@@ -153,15 +153,13 @@ startScriptsServer
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
 			nextPutAll: 'sh start-deferred-scripts-loop.sh '''.
 
-	result := gciSession executeString: command contents.
+	gciSession executeString: command contents.
 
-	MessageBox notify: result.
-
-	self fillSessionList
+	self fillSessionList.
 !
 
 startTimersServer
-	| result command |
+	| command |
 
 	(MessageBox confirm: 'Start Timers Session?') ifFalse: [^self].
 
@@ -170,11 +168,9 @@ startTimersServer
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
 			nextPutAll: 'sh start-timers-loop.sh '''.
 
-	result := gciSession executeString: command contents.
+	gciSession executeString: command contents.
 
-	MessageBox notify: result.
-
-	self fillSessionList!
+	self fillSessionList.!
 
 stopAll
 	| result command |
