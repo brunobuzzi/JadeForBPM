@@ -13,7 +13,7 @@ BpmAllSessionsPresenter comment: ''!
 createComponents
 	super createComponents.
 
-	webSeverGemsListPresenter := self add: ListPresenter new name: 'gemsList'!
+	webSeverGemsListPresenter := self add: ListPresenter new name: 'webServersGemsList'!
 
 createSchematicWiring
 
