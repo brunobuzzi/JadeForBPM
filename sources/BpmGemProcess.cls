@@ -71,8 +71,13 @@ stopSession
 
 !BpmGemProcess class methodsFor!
 
+icon
+
+	^Icon fromFile: 'icons\GS128.ico'!
+
 new
 
 	^super new initialize! !
+!BpmGemProcess class categoriesFor: #icon!public! !
 !BpmGemProcess class categoriesFor: #new!public! !
 
