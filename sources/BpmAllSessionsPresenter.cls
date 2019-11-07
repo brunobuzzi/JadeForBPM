@@ -1,7 +1,7 @@
 ﻿"Filed out from Dolphin Smalltalk 7"!
 
 AllSessionsPresenter subclass: #BpmAllSessionsPresenter
-	instanceVariableNames: 'gemsListPresenter pingLoop'
+	instanceVariableNames: 'webSeverGemsListPresenter pingLoop'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -11,47 +11,36 @@ BpmAllSessionsPresenter comment: ''!
 !BpmAllSessionsPresenter methodsFor!
 
 createComponents
-
 	super createComponents.
 
-	gemsListPresenter := self add: ListPresenter new name: 'gemsList'.!
+	webSeverGemsListPresenter := self add: ListPresenter new name: 'gemsList'!
 
 createSchematicWiring
 
 	super createSchematicWiring.
 
-	gemsListPresenter when: #selectionChanged send: #onGemProcessSelected to: self!
+	webSeverGemsListPresenter when: #selectionChanged send: #onGemProcessSelected to: self!
 
 fillSessionList
 	| portPidString portPidStringList |
 
 	super fillSessionList.
-
 	portPidString := gciSession executeString: 'BpmGemsInfo getGemsPidAndPortString'.
-
 	portPidStringList := portPidString subStrings: ','.
-
-	gemsListPresenter model: ListModel new.
-	portPidStringList do: [:portPid | | portPidArray gemProc gsSession |
-		portPidArray := portPid subStrings: '>>'.
-		gemProc := BpmGemProcess new port: portPidArray first; pid: portPidArray second ; yourself.
-		gsSession := sessionListPresenter model detect: [:each | each process printString = gemProc pid] ifNone: [].
-		gsSession ifNotNil: [
-			gemProc name: gsSession cacheDesc;
-				gsSession: gsSession.
-			gemsListPresenter model add: gemProc].
+	webSeverGemsListPresenter model: ListModel new.
+	portPidStringList do: 	[:portPid | | portPidArray gemProc gsSession |
+			portPidArray := portPid subStrings: '>>'.
+			gemProc := BpmGemProcess new port: portPidArray first; pid: portPidArray second; yourself.
+			gsSession := sessionListPresenter model detect: [:each | each process printString = gemProc pid] ifNone: [].
+			gsSession ifNotNil: [gemProc name: gsSession cacheDesc; gsSession: gsSession.
+					webSeverGemsListPresenter model add: gemProc]
 	].
-
-	(sessionListPresenter model detect: [:gsSession | (gsSession cacheDesc = 'TimersLoop')] ifNone: [])
-	ifNotNil: [:gsSession | | gemProc |
-		gemProc := BpmGemProcess new name: gsSession cacheDesc; port: 'N/A'; pid: gsSession process; gsSession: gsSession; yourself.
-		gemsListPresenter model add: gemProc].
-
-	(sessionListPresenter model detect: [:gsSession | (gsSession cacheDesc = 'ScriptsLoop')] ifNone: [])
-	ifNotNil: [:gsSession | | gemProc |
-		gemProc := BpmGemProcess new name: gsSession cacheDesc; port: 'N/A'; pid: gsSession process; gsSession: gsSession; yourself.
-		gemsListPresenter model add: gemProc].
-!
+	(sessionListPresenter model detect: [:gsSession | gsSession cacheDesc = 'TimersLoop'] ifNone: []) ifNotNil: [:gsSession | | gemProc |
+			gemProc := BpmGemProcess new name: gsSession cacheDesc; port: 'N/A'; pid: gsSession process; gsSession: gsSession; yourself.
+			webSeverGemsListPresenter model add: gemProc].
+	(sessionListPresenter model detect: [:gsSession | gsSession cacheDesc = 'ScriptsLoop'] ifNone: []) ifNotNil: [:gsSession | | gemProc |
+			gemProc := BpmGemProcess new name: gsSession cacheDesc; port: 'N/A'; pid: gsSession process; gsSession: gsSession; yourself.
+			webSeverGemsListPresenter model add: gemProc]!
 
 gemstoneBashCurlCommandFor: aBpmGemProcess
 	| command |
@@ -64,36 +53,29 @@ gemstoneBashCurlCommandFor: aBpmGemProcess
 
 onGemProcessSelected
 
-	gemsListPresenter hasSelection ifFalse: [^sessionListPresenter resetSelection].
+	webSeverGemsListPresenter hasSelection ifFalse: [^sessionListPresenter resetSelection].
 
-	sessionListPresenter selection: gemsListPresenter selection gsSession ifAbsent: []
-!
+	sessionListPresenter selection: webSeverGemsListPresenter selection gsSession ifAbsent: []!
 
 pingPort
 	| result |
 
-	gemsListPresenter hasSelection ifFalse: [^self].
-
-	result := gciSession executeString: (self gemstoneBashCurlCommandFor: gemsListPresenter selection).
-
+	webSeverGemsListPresenter hasSelection ifFalse: [^self].
+	result := gciSession executeString: (self gemstoneBashCurlCommandFor: webSeverGemsListPresenter selection).
 	MessageBox notify: result.
-
-	gemsListPresenter selection setPingStatusFrom: result!
+	webSeverGemsListPresenter selection setPingStatusFrom: result!
 
 restartOnPort
 	| result command |
 
-	gemsListPresenter hasSelection ifFalse: [^self].
-
+	webSeverGemsListPresenter hasSelection ifFalse: [^self].
 	command := WriteStream on: String new.
-	command nextPutAll: 'System performOnServer: ';
-			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
-			nextPutAll: 'sh start-on.sh ', gemsListPresenter selection port, ''''.
-
+	command
+		nextPutAll: 'System performOnServer: ';
+		nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
+		nextPutAll: 'sh start-on.sh ' , webSeverGemsListPresenter selection port , ''''.
 	result := gciSession executeString: command contents.
-
 	MessageBox notify: result.
-
 	self fillSessionList!
 
 startAll
@@ -134,14 +116,13 @@ startOnPort
 
 startPingLoop
 
-	pingLoop := [ [true] whileTrue: [
-			gemsListPresenter model do: [:bpmGemProc | | result |
-				result := gciSession executeString: (self gemstoneBashCurlCommandFor: bpmGemProc).
-				bpmGemProc setPingStatusFrom: result.
-				(Delay forSeconds: JadeBpmCustomizationPreference default webServerCheckLoopDelay) wait.
-			].
-		].
-	] forkAt: 4.!
+	pingLoop := [[true] whileTrue: [webSeverGemsListPresenter model do: [:bpmGemProc |  | result |
+							result := gciSession executeString: (self gemstoneBashCurlCommandFor: bpmGemProc).
+							bpmGemProc setPingStatusFrom: result.
+							(Delay forSeconds: JadeBpmCustomizationPreference default webServerCheckLoopDelay) wait.
+							]
+						]
+			] forkAt: 4!
 
 startScriptsServer
 	| command |
@@ -194,18 +175,14 @@ stopOnPort
 	| result command |
 
 	(MessageBox confirm: 'Stop Port Session?') ifFalse: [^self].
-
-	gemsListPresenter hasSelection ifFalse: [^self].
-
+	webSeverGemsListPresenter hasSelection ifFalse: [^self].
 	command := WriteStream on: String new.
-	command nextPutAll: 'System performOnServer: ';
-			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
-			nextPutAll: 'sh stop-on.sh ', gemsListPresenter selection port, ''''.
-
+	command
+		nextPutAll: 'System performOnServer: ';
+		nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
+		nextPutAll: 'sh stop-on.sh ' , webSeverGemsListPresenter selection port , ''''.
 	result := gciSession executeString: command contents.
-
 	MessageBox notify: result.
-
 	self fillSessionList!
 
 stopPingLoop
@@ -219,26 +196,20 @@ stopPingLoop
 stopScriptsServer
 	| bpmGemProcess |
 
-	bpmGemProcess := gemsListPresenter model detect: [:each | each name = 'ScriptsLoop'] ifNone: [^self].
-
+	bpmGemProcess := webSeverGemsListPresenter model detect: [:each | each name = 'ScriptsLoop'] ifNone: [^self].
 	(MessageBox confirm: 'Stop Scripts Session?') ifFalse: [^self].
-
 	bpmGemProcess stopSession.
 	(Delay forSeconds: 1) wait.
-	self fillSessionList.!
+	self fillSessionList!
 
 stopTimersServer
 	| bpmGemProcess |
 
-	bpmGemProcess := gemsListPresenter model detect: [:each | each name = 'TimersLoop'] ifNone: [^self].
-
+	bpmGemProcess := webSeverGemsListPresenter model detect: [:each | each name = 'TimersLoop'] ifNone: [^self].
 	(MessageBox confirm: 'Stop Timers Session?') ifFalse: [^self].
-
 	bpmGemProcess stopSession.
 	(Delay forSeconds: 1) wait.
-	self fillSessionList.
-
-	! !
+	self fillSessionList! !
 !BpmAllSessionsPresenter categoriesFor: #createComponents!public! !
 !BpmAllSessionsPresenter categoriesFor: #createSchematicWiring!public! !
 !BpmAllSessionsPresenter categoriesFor: #fillSessionList!public!updating! !

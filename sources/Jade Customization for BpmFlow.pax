@@ -68,7 +68,7 @@ JadePreferenceObject subclass: #JadeBpmCustomizationPreference
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 AllSessionsPresenter subclass: #BpmAllSessionsPresenter
-	instanceVariableNames: 'gemsListPresenter pingLoop'
+	instanceVariableNames: 'webSeverGemsListPresenter pingLoop'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
