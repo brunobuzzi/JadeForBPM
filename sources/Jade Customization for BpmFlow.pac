@@ -14,6 +14,7 @@ package classNames
 	yourself.
 
 package methodNames
+	add: #CodeSourcePresenter -> #getClassName;
 	add: #JadeLoginShell -> #postLogin:;
 	add: #JadeSystemBrowser -> #jadeBrowseTests;
 	add: #JadeTextDocument -> #jadeBrowseTests;
@@ -92,6 +93,12 @@ JadeSUnitBrowser subclass: #JadeForBpmFlowSUnitBrowser
 
 
 "Loose Methods"!
+
+!CodeSourcePresenter methodsFor!
+
+getClassName
+	^nil! !
+!CodeSourcePresenter categoriesFor: #getClassName!public! !
 
 !JadeLoginShell methodsFor!
 
