@@ -384,7 +384,7 @@ startAll
 	command := WriteStream on: String new.
 	command nextPutAll: 'System performOnServer: ';
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
-			nextPutAll: 'sh start-all.sh '''.
+			nextPutAll: 'sh start-all.sh ', self stoneName , ''''.
 
 	result := gciSession executeString: command contents.
 
@@ -404,7 +404,7 @@ startOnPort
 	command := WriteStream on: String new.
 	command nextPutAll: 'System performOnServer: ';
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
-			nextPutAll: 'sh start-on.sh ', port, ''''.
+			nextPutAll: 'sh start-on.sh ', self stoneName, ' ', port, ''''.
 
 	result := gciSession executeString: command contents.
 
@@ -430,7 +430,7 @@ startScriptsServer
 	command := WriteStream on: String new.
 	command nextPutAll: 'System performOnServer: ';
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
-			nextPutAll: 'sh start-deferred-scripts-loop.sh '''.
+			nextPutAll: 'sh start-deferred-scripts-loop.sh ', self stoneName , ''''.
 
 	gciSession executeString: command contents.
 
@@ -445,11 +445,15 @@ startTimersServer
 	command := WriteStream on: String new.
 	command nextPutAll: 'System performOnServer: ';
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
-			nextPutAll: 'sh start-timers-loop.sh '''.
+			nextPutAll: 'sh start-timers-loop.sh ', self stoneName , ''''.
 
 	gciSession executeString: command contents.
 
 	self fillSessionList.!
+
+stoneName
+
+	^gciSession executeString: 'BpmGemsInfo stoneName'!
 
 stopAll
 	| result command |
@@ -461,7 +465,7 @@ stopAll
 	command := WriteStream on: String new.
 	command nextPutAll: 'System performOnServer: ';
 			nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
-			nextPutAll: 'sh stop-all.sh '''.
+			nextPutAll: 'sh stop-all.sh ', self stoneName , ''''.
 
 	result := gciSession executeString: command contents.
 
@@ -478,7 +482,7 @@ stopOnPort
 	command
 		nextPutAll: 'System performOnServer: ';
 		nextPutAll: '''cd $GS_HOME/shared/repos/BpmFlow/scripts; ';
-		nextPutAll: 'sh stop-on.sh ' , webSeverGemsListPresenter selection port , ''''.
+		nextPutAll: 'sh stop-on.sh ' , self stoneName , ' ' , webSeverGemsListPresenter selection port , ''''.
 	result := gciSession executeString: command contents.
 	MessageBox notify: result.
 	self fillSessionList!
@@ -520,6 +524,7 @@ stopTimersServer
 !BpmAllSessionsPresenter categoriesFor: #startPingLoop!bpm flow monitoring!public! !
 !BpmAllSessionsPresenter categoriesFor: #startScriptsServer!bpm flow commands!public! !
 !BpmAllSessionsPresenter categoriesFor: #startTimersServer!bpm flow commands!public! !
+!BpmAllSessionsPresenter categoriesFor: #stoneName!public! !
 !BpmAllSessionsPresenter categoriesFor: #stopAll!bpm flow commands!public! !
 !BpmAllSessionsPresenter categoriesFor: #stopOnPort!bpm flow commands!public!updating! !
 !BpmAllSessionsPresenter categoriesFor: #stopPingLoop!bpm flow monitoring!public! !
@@ -548,51 +553,57 @@ runSelected
 	| result tests gsResult fileStream isProcessSimulationTest |
 	result := JadeTestResult new.
 	tests := Dictionary new.
-	testCasesPresenter selections do: 
-			[:gsTestMethod |
+	testCasesPresenter selections do:  [:gsTestMethod |
 			tests at: gsTestMethod className ifAbsentPut: [OrderedCollection new].
 			(tests at: gsTestMethod className) add: gsTestMethod].
 	fileStream := FileStream write: JadeBpmCustomizationPreference default svgExternalFile text: true.
 	"	fileStream nextPutAll: '<svg>'.  "
-	tests keysAndValuesDo: 
-			[:className :testsToExecute |
-			| testInstance collectionResult procInstance svg passedSize failureSize errorSize |
+	tests keysAndValuesDo: [:className :testsToExecute | | testInstance collectionResult failedCollectionResult errorsCollectionResult procInstance svg passedSize failureSize errorSize |
 			"self runTests: testsToExecute in: className result: result."
 			isProcessSimulationTest := gciSession executeString: className , ' isProcessSimulationTest'.	"this is executed only for GS subclasses of <BpmProcessExecutionTest>"
-			testsToExecute do: 
-					[:gsTestMethod |
-					gsResult := gciSession
-								executeString: '(' , className , ' selector: #' , gsTestMethod methodName , ') run'.
+			testsToExecute do: [:gsTestMethod |
+					gsResult := gciSession executeString: '(' , className , ' selector: #' , gsTestMethod methodName , ') run'.
 					failureSize := gciSession send: #size to: (gciSession send: #failures to: gsResult).
 					errorSize := gciSession send: #size to: (gciSession send: #errors to: gsResult).
 					collectionResult := gciSession send: #passed to: gsResult.
+					failedCollectionResult := gciSession send: #asArray to: (gciSession send: #failures to: gsResult).
+					errorsCollectionResult := gciSession send: #errors to: gsResult.
 					passedSize := gciSession send: #size to: collectionResult.
 					failureSize > 0
-						ifTrue: 
-							[gsTestMethod result: 'failure'.
-							result addFailure: gsTestMethod].
+					ifTrue: [gsTestMethod result: 'failure'.
+						result addFailure: gsTestMethod].
 					errorSize > 0
-						ifTrue: 
-							[gsTestMethod result: 'error'.
-							result addError: gsTestMethod].
+					ifTrue: [gsTestMethod result: 'error'.
+						result addError: gsTestMethod].
 					passedSize > 0
-						ifTrue: 
-							[gsTestMethod result: 'passed'.
-							result addPassed: gsTestMethod].
+					ifTrue: [gsTestMethod result: 'passed'.
+						result addPassed: gsTestMethod].
 					isProcessSimulationTest
-						ifTrue: 
-							[1 to: passedSize
-								do: 
-									[:index |
-									testInstance := gciSession
-												send: #at:
-												to: collectionResult
-												withAll: (Array with: index).
+					ifTrue: [
+						1 to: passedSize do: [:index |
+									testInstance := gciSession send: #at: to: collectionResult withAll: (Array with: index).
 									procInstance := gciSession send: #procInstance to: testInstance.
-									procInstance
-										ifNotNil: 
-											[svg := gciSession send: #asSVG to: procInstance.
-											fileStream nextPutAll: svg]]]]].
+									procInstance ifNotNil: [
+											svg := gciSession send: #asSVG to: procInstance.
+											fileStream nextPutAll: svg].
+						].
+						1 to: failureSize do: [:index |
+									testInstance := gciSession send: #at: to: failedCollectionResult withAll: (Array with: index).
+									procInstance := gciSession send: #procInstance to: testInstance.
+									procInstance ifNotNil: [
+											svg := gciSession send: #asSVG to: procInstance.
+											fileStream nextPutAll: svg].
+						].
+						1 to: errorSize do: [:index |
+									testInstance := gciSession send: #at: to: errorsCollectionResult withAll: (Array with: index).
+									procInstance := gciSession send: #procInstance to: testInstance.
+									procInstance ifNotNil: [
+											svg := gciSession send: #asSVG to: procInstance.
+											fileStream nextPutAll: svg].
+						].
+					].
+			]
+	].
 	"fileStream nextPutAll: '</svg>'.  "
 	fileStream
 		flush;
