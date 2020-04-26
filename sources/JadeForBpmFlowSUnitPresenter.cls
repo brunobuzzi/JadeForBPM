@@ -14,51 +14,57 @@ runSelected
 	| result tests gsResult fileStream isProcessSimulationTest |
 	result := JadeTestResult new.
 	tests := Dictionary new.
-	testCasesPresenter selections do: 
-			[:gsTestMethod |
+	testCasesPresenter selections do:  [:gsTestMethod |
 			tests at: gsTestMethod className ifAbsentPut: [OrderedCollection new].
 			(tests at: gsTestMethod className) add: gsTestMethod].
 	fileStream := FileStream write: JadeBpmCustomizationPreference default svgExternalFile text: true.
 	"	fileStream nextPutAll: '<svg>'.  "
-	tests keysAndValuesDo: 
-			[:className :testsToExecute |
-			| testInstance collectionResult procInstance svg passedSize failureSize errorSize |
+	tests keysAndValuesDo: [:className :testsToExecute | | testInstance collectionResult failedCollectionResult errorsCollectionResult procInstance svg passedSize failureSize errorSize |
 			"self runTests: testsToExecute in: className result: result."
 			isProcessSimulationTest := gciSession executeString: className , ' isProcessSimulationTest'.	"this is executed only for GS subclasses of <BpmProcessExecutionTest>"
-			testsToExecute do: 
-					[:gsTestMethod |
-					gsResult := gciSession
-								executeString: '(' , className , ' selector: #' , gsTestMethod methodName , ') run'.
+			testsToExecute do: [:gsTestMethod |
+					gsResult := gciSession executeString: '(' , className , ' selector: #' , gsTestMethod methodName , ') run'.
 					failureSize := gciSession send: #size to: (gciSession send: #failures to: gsResult).
 					errorSize := gciSession send: #size to: (gciSession send: #errors to: gsResult).
 					collectionResult := gciSession send: #passed to: gsResult.
+					failedCollectionResult := gciSession send: #asArray to: (gciSession send: #failures to: gsResult).
+					errorsCollectionResult := gciSession send: #errors to: gsResult.
 					passedSize := gciSession send: #size to: collectionResult.
 					failureSize > 0
-						ifTrue: 
-							[gsTestMethod result: 'failure'.
-							result addFailure: gsTestMethod].
+					ifTrue: [gsTestMethod result: 'failure'.
+						result addFailure: gsTestMethod].
 					errorSize > 0
-						ifTrue: 
-							[gsTestMethod result: 'error'.
-							result addError: gsTestMethod].
+					ifTrue: [gsTestMethod result: 'error'.
+						result addError: gsTestMethod].
 					passedSize > 0
-						ifTrue: 
-							[gsTestMethod result: 'passed'.
-							result addPassed: gsTestMethod].
+					ifTrue: [gsTestMethod result: 'passed'.
+						result addPassed: gsTestMethod].
 					isProcessSimulationTest
-						ifTrue: 
-							[1 to: passedSize
-								do: 
-									[:index |
-									testInstance := gciSession
-												send: #at:
-												to: collectionResult
-												withAll: (Array with: index).
+					ifTrue: [
+						1 to: passedSize do: [:index |
+									testInstance := gciSession send: #at: to: collectionResult withAll: (Array with: index).
 									procInstance := gciSession send: #procInstance to: testInstance.
-									procInstance
-										ifNotNil: 
-											[svg := gciSession send: #asSVG to: procInstance.
-											fileStream nextPutAll: svg]]]]].
+									procInstance ifNotNil: [
+											svg := gciSession send: #asSVG to: procInstance.
+											fileStream nextPutAll: svg].
+						].
+						1 to: failureSize do: [:index |
+									testInstance := gciSession send: #at: to: failedCollectionResult withAll: (Array with: index).
+									procInstance := gciSession send: #procInstance to: testInstance.
+									procInstance ifNotNil: [
+											svg := gciSession send: #asSVG to: procInstance.
+											fileStream nextPutAll: svg].
+						].
+						1 to: errorSize do: [:index |
+									testInstance := gciSession send: #at: to: errorsCollectionResult withAll: (Array with: index).
+									procInstance := gciSession send: #procInstance to: testInstance.
+									procInstance ifNotNil: [
+											svg := gciSession send: #asSVG to: procInstance.
+											fileStream nextPutAll: svg].
+						].
+					].
+			]
+	].
 	"fileStream nextPutAll: '</svg>'.  "
 	fileStream
 		flush;
